@@ -4,11 +4,13 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.lib16.java.graphics.geometry.Angle;
 import com.lib16.java.graphics.geometry.Path;
 import com.lib16.java.graphics.geometry.Point;
 import com.lib16.java.svg.Svg.Align;
 import com.lib16.java.svg.Svg.MeetOrSlice;
 import com.lib16.java.svg.Svg.Units;
+import com.lib16.java.utils.Unit;
 import com.lib16.java.xml.shared.TargetAttribute.Target;
 
 public class SvgTest
@@ -27,6 +29,32 @@ public class SvgTest
 			}
 		};
 		return new Object[][] {
+			{
+				Svg.createSvg(tp, 800, Unit.PX, 10, Unit.EM),
+				"<svg "
+						+ "xmlns=\"http://www.w3.org/2000/svg\" "
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+						+ "width=\"800px\" height=\"10em\"/>",
+			},
+			{
+				Svg.createSvg(tp),
+				"<svg "
+						+ "xmlns=\"http://www.w3.org/2000/svg\" "
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\"/>",
+			},
+			{
+				Svg.createSvg(800, Unit.PX, 10, Unit.EM),
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<svg "
+						+ "xmlns=\"http://www.w3.org/2000/svg\" "
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+						+ "width=\"800px\" height=\"10em\"/>",
+			},
+			{
+				Svg.createSvg(),
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<svg "
+						+ "xmlns=\"http://www.w3.org/2000/svg\" "
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\"/>",
+			},
 			{
 				Svg.createSub().rect(point, 30, 40, 5, 2.5),
 				"<rect x=\"10\" y=\"20\" width=\"30\" height=\"40\" rx=\"5\" ry=\"2.5\"/>"
@@ -160,9 +188,18 @@ public class SvgTest
 				Svg.createSub().mask("m1"),
 				"<mask id=\"m1\"/>"
 			},
+			// Attributes
 			{
-				Svg.createSvg(tp).setViewbox(new Point(0, 0), 640, 400),
-				"<svg viewBox=\"0 0 640 400\"/>"
+				Svg.createSub().g().setClass("foo", "bar").setClass("baz"),
+				"<g class=\"foo bar baz\"/>"
+			},
+			{
+				Svg.createSub().text("foo bar").setDx(-5, 0),
+				"<text dx=\"-5 0\">foo bar</text>"
+			},
+			{
+				Svg.createSub().text("foo bar").setDy(-5, 0),
+				"<text dy=\"-5 0\">foo bar</text>"
 			},
 			{
 				Svg.createSub().image("image.jpg")
@@ -178,6 +215,24 @@ public class SvgTest
 				Svg.createSub().image("image.jpg")
 						.setPreserveAspectRatio(Align.X_MID_Y_MIN),
 				"<image xlink:href=\"image.jpg\" preserveAspectRatio=\"xMidYMin\"/>"
+			},
+			{
+				Svg.createSub().image("image.jpg").setPreserveAspectRatio(null),
+				"<image xlink:href=\"image.jpg\"/>"
+			},
+			{
+				Svg.createSub().text("foo bar").setRotate(
+						Angle.byDegrees(15), Angle.byDegrees(10),
+						Angle.byDegrees(5), Angle.byDegrees(0)),
+				"<text rotate=\"15 10 5 0\">foo bar</text>"
+			},
+			{
+				Svg.createSub().image("image.jpg").setViewBox(new Point(0, 0), 640, 400),
+				"<image xlink:href=\"image.jpg\" viewBox=\"0 0 640 400\"/>"
+			},
+			{
+				Svg.createSub().image("image.jpg").setViewBox(null, 640, 400),
+				"<image xlink:href=\"image.jpg\"/>"
 			},
 		};
 	}

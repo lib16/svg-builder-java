@@ -2,9 +2,11 @@ package com.lib16.java.svg;
 
 import java.text.NumberFormat;
 
+import com.lib16.java.graphics.geometry.Angle;
 import com.lib16.java.graphics.geometry.Path;
 import com.lib16.java.graphics.geometry.Point;
 import com.lib16.java.utils.NumberFormatWrapper;
+import com.lib16.java.utils.Unit;
 import com.lib16.java.xml.Language;
 import com.lib16.java.xml.Xml;
 import com.lib16.java.xml.shared.ClassAttribute;
@@ -21,20 +23,29 @@ public final class Svg implements Language
 		this.xml = xml;
 	}
 
-	public static Svg createSvg(SvgProperties properties, Number width, Number height)
+	public static Svg createSvg(SvgProperties properties,
+			Number width, Unit widthUnit, Number height, Unit heightUnit)
 	{
 		if (properties == null) {
 			properties = new DefaultSvgProperties();
 		}
 		Svg element = new Svg(Xml.createRoot("svg", properties));
-		element.setSize(width, height);
-		element.getXml().getAttributes().set("viewBox", null);
+		NumberFormatWrapper wrapper = element.getFormatWrapper();
+		element.xml.getAttributes()
+				.setNumber("width", width, wrapper, widthUnit)
+				.setNumber("height", height, wrapper, heightUnit)
+				.setNull("viewBox", "preserveAspectRatio");
 		return element;
 	}
 
 	public static Svg createSvg(SvgProperties properties)
 	{
-		return createSvg(properties, null, null);
+		return createSvg(properties, null, null, null, null);
+	}
+
+	public static Svg createSvg(Number width, Unit widthUnit, Number height, Unit heightUnit)
+	{
+		return createSvg(null, width, widthUnit, height, heightUnit);
 	}
 
 	public static Svg createSvg()
@@ -348,10 +359,17 @@ public final class Svg implements Language
 
 	public Svg setPreserveAspectRatio(Align align, MeetOrSlice meetOrSlice, boolean defer)
 	{
-		xml.getAttributes().set("preserveAspectRatio",
-				(defer ? "defer " : "")
-				+ align.toString()
-				+ (meetOrSlice != null ? " " + meetOrSlice.toString() : ""));
+		String preserveAspectRatio;
+		if (align != null) {
+			preserveAspectRatio =
+					(defer ? "defer " : "")
+					+ align.toString()
+					+ (meetOrSlice != null ? " " + meetOrSlice.toString() : "");
+		}
+		else {
+			preserveAspectRatio = null;
+		}
+		xml.getAttributes().set("preserveAspectRatio", preserveAspectRatio);
 		return this;
 	}
 
@@ -373,9 +391,12 @@ public final class Svg implements Language
 		return setPointAttributes(position, "x", "y");
 	}
 
-	public Svg setRotate(Number... rotate)
+	public Svg setRotate(Angle... rotate)
 	{
-		xml.getAttributes().setNumber("rotate", " ", getDegreesFormatWrapper(), rotate);
+		for (Angle r: rotate) {
+			xml.getAttributes().setNumber(
+					"rotate", " ", getDegreesFormatWrapper(), r.getDegrees());
+		}
 		return this;
 	}
 
@@ -385,14 +406,21 @@ public final class Svg implements Language
 		return this;
 	}
 
-	public Svg setViewbox(Point corner, double width, double height)
+	public Svg setViewBox(Point corner, double width, double height)
 	{
-		NumberFormat format = getFormatWrapper().getNumberFormat();
-		xml.getAttributes().set("viewBox",
-				format.format(corner.getX()) + " " +
-				format.format(corner.getY()) + " " +
-				format.format(width) + " " +
-				format.format(height));
+		String viewBox;
+		if (corner != null) {
+			NumberFormat format = getFormatWrapper().getNumberFormat();
+			viewBox =
+					format.format(corner.getX()) + " " +
+					format.format(corner.getY()) + " " +
+					format.format(width) + " " +
+					format.format(height);
+		}
+		else {
+			viewBox = null;
+		}
+		xml.getAttributes().set("viewBox", viewBox);
 		return this;
 	}
 
