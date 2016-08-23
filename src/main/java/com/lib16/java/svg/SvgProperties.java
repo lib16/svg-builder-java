@@ -5,6 +5,8 @@ import com.lib16.java.xml.LanguageProperties;
 
 public interface SvgProperties extends LanguageProperties
 {
+	public String getSvgVersion();
+
 	public NumberFormatWrapper getFormatWrapper();
 
 	public NumberFormatWrapper getDegreesFormatWrapper();

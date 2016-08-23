@@ -32,6 +32,7 @@ public final class Svg implements Language
 		Svg element = new Svg(Xml.createRoot("svg", properties));
 		NumberFormatWrapper wrapper = element.getFormatWrapper();
 		element.xml.getAttributes()
+				.set("version", properties.getSvgVersion())
 				.setNumber("width", width, wrapper, widthUnit)
 				.setNumber("height", height, wrapper, heightUnit)
 				.setNull("viewBox", "preserveAspectRatio");
@@ -271,6 +272,20 @@ public final class Svg implements Language
 	public Svg mask(String id)
 	{
 		return mask(id, null);
+	}
+
+	public Svg style(String style)
+	{
+		Svg element = new Svg(xml.append("style"));
+		element.xml.appendText(style);
+		return element;
+	}
+
+	public Svg script(String script)
+	{
+		Svg element = new Svg(xml.append("script"));
+		element.xml.appendText(script);
+		return element;
 	}
 
 	/**

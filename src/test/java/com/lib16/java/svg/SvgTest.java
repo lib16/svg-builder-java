@@ -27,6 +27,12 @@ public class SvgTest
 			{
 				return false;
 			}
+
+			@Override
+			public String getSvgVersion()
+			{
+				return "2.0";
+			}
 		};
 		return new Object[][] {
 			{
@@ -34,13 +40,15 @@ public class SvgTest
 				"<svg "
 						+ "xmlns=\"http://www.w3.org/2000/svg\" "
 						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+						+ "version=\"2.0\" "
 						+ "width=\"800px\" height=\"10em\"/>",
 			},
 			{
 				Svg.createSvg(tp),
 				"<svg "
 						+ "xmlns=\"http://www.w3.org/2000/svg\" "
-						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\"/>",
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+						+ "version=\"2.0\"/>",
 			},
 			{
 				Svg.createSvg(800, Unit.PX, 10, Unit.EM),
@@ -187,6 +195,22 @@ public class SvgTest
 			{
 				Svg.createSub().mask("m1"),
 				"<mask id=\"m1\"/>"
+			},
+			{
+				Svg.createSvg().style(".h1 {\n\tfont-size: 20px;\n}"),
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<svg "
+						+ "xmlns=\"http://www.w3.org/2000/svg\" "
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
+						+ "\n\t<style>\n\t\t.h1 {\n\t\t\tfont-size: 20px;\n\t\t}"
+						+ "\n\t</style>\n</svg>"
+			},
+			{
+				Svg.createSvg().script("/*\n *\n */"),
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<svg "
+						+ "xmlns=\"http://www.w3.org/2000/svg\" "
+						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
+						+ "\n\t<script>\n\t\t/*\n\t\t *\n\t\t */"
+						+ "\n\t</script>\n</svg>"
 			},
 			// Attributes
 			{

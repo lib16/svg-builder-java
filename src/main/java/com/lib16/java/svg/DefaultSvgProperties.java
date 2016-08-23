@@ -37,6 +37,12 @@ public class DefaultSvgProperties extends XmlProperties implements SvgProperties
 	}
 
 	@Override
+	public String getSvgVersion()
+	{
+		return null;
+	}
+
+	@Override
 	public NumberFormatWrapper getFormatWrapper()
 	{
 		return formatWrapper;
