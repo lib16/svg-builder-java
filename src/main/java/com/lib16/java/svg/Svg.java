@@ -289,6 +289,86 @@ public final class Svg implements Language
 	}
 
 	/**
+	 * Appends a {@code translate} operation to the {@code transform} attribute.
+	 */
+	public Svg addTranslate(double x, double y)
+	{
+		return setTransform("translate",
+				getFormatWrapper().format(x) + " " +
+				getFormatWrapper().format(y));
+	}
+
+	/**
+	 * Appends a {@code scale} operation to the {@code transform} attribute.
+	 */
+	public Svg addScale(double x, double y)
+	{
+		return setTransform("scale",
+				getFormatWrapper().format(x) + " " +
+				getFormatWrapper().format(y));
+	}
+
+	/**
+	 * Appends a {@code scale} operation to the {@code transform} attribute.
+	 */
+	public Svg addScale(double factor)
+	{
+		return setTransform("scale",
+				getFormatWrapper().format(factor));
+	}
+
+	/**
+	 * Appends a {@code rotate} operation to the {@code transform} attribute.
+	 */
+	public Svg addRotate(Angle angle)
+	{
+		return setTransform("rotate",
+				getDegreesFormatWrapper().format(angle.getDegrees()));
+	}
+
+	/**
+	 * Appends a {@code rotate} operation to the {@code transform} attribute.
+	 */
+	public Svg addRotate(Angle angle, Point center)
+	{
+		return setTransform("rotate",
+				getDegreesFormatWrapper().format(angle.getDegrees()) + " " +
+				center.toSvg(getFormatWrapper().getNumberFormat()));
+	}
+
+	/**
+	 * Appends a {@code skewX} operation to the {@code transform} attribute.
+	 */
+	public Svg addSkewX(Angle angle)
+	{
+		return setTransform("skewX",
+				getDegreesFormatWrapper().format(angle.getDegrees()));
+	}
+
+	/**
+	 * Appends a {@code skewY} operation to the {@code transform} attribute.
+	 */
+	public Svg addSkewY(Angle angle)
+	{
+		return setTransform("skewY",
+				getDegreesFormatWrapper().format(angle.getDegrees()));
+	}
+
+	/**
+	 * Appends a {@code matrix} operation to the {@code transform} attribute.
+	 */
+	public Svg addMatrix(double a, double b, double c, double d, double e, double f)
+	{
+		return setTransform("matrix",
+				getFormatWrapper().format(a) + " " +
+				getFormatWrapper().format(b) + " " +
+				getFormatWrapper().format(c) + " " +
+				getFormatWrapper().format(d) + " " +
+				getFormatWrapper().format(e) + " " +
+				getFormatWrapper().format(f));
+	}
+
+	/**
 	 * Sets the {@code cx} and {@code cy} attributes.
 	 */
 	public Svg setCenter(Point center)
@@ -449,6 +529,12 @@ public final class Svg implements Language
 	public Xml getXml()
 	{
 		return xml;
+	}
+
+	private Svg setTransform(String type, String args)
+	{
+		xml.getAttributes().setComplex("transform", " ", false, type + "(" + args + ")");
+		return this;
 	}
 
 	private Svg setUnitsAttrib(String AttributeName, Units units)

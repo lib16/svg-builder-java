@@ -16,6 +16,7 @@ import com.lib16.java.xml.shared.TargetAttribute.Target;
 public class SvgTest
 {
 	private static Point point = new Point(10, 20);
+	private static Angle angle = Angle.byDegrees(45);
 
 	@DataProvider(name = "provider")
 	public static Object[][] provider()
@@ -213,6 +214,42 @@ public class SvgTest
 						+ "\n\t</script>\n</svg>"
 			},
 			// Attributes
+			{
+				Svg.createSub().circle(point, 100).addTranslate(50, 40),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"translate(50 40)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addScale(1.5, -2),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"scale(1.5 -2)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addScale(1.5),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"scale(1.5)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addRotate(angle),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"rotate(45)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addRotate(angle, point),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"rotate(45 10,20)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addSkewX(angle),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"skewX(45)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addSkewY(angle),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"skewY(45)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addMatrix(1, 2, 3, 4, 5, 6),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"matrix(1 2 3 4 5 6)\"/>"
+			},
+			{
+				Svg.createSub().circle(point, 100).addScale(0.6, 1).addSkewX(angle),
+				"<circle cx=\"10\" cy=\"20\" r=\"100\" transform=\"scale(0.6 1) skewX(45)\"/>"
+			},
 			{
 				Svg.createSub().g().setClass("foo", "bar").setClass("baz"),
 				"<g class=\"foo bar baz\"/>"
