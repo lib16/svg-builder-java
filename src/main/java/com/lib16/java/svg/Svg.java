@@ -1,11 +1,9 @@
 package com.lib16.java.svg;
 
-import java.text.NumberFormat;
-
 import com.lib16.java.graphics.geometry.Angle;
 import com.lib16.java.graphics.geometry.Path;
 import com.lib16.java.graphics.geometry.Point;
-import com.lib16.java.utils.NumberFormatWrapper;
+import com.lib16.java.utils.NumberFormatter;
 import com.lib16.java.utils.Unit;
 import com.lib16.java.xml.Language;
 import com.lib16.java.xml.Xml;
@@ -30,7 +28,7 @@ public final class Svg implements Language
 			properties = new DefaultSvgProperties();
 		}
 		Svg element = new Svg(Xml.createRoot("svg", properties));
-		NumberFormatWrapper wrapper = element.getFormatWrapper();
+		NumberFormatter wrapper = element.getFormatter();
 		element.xml.getAttributes()
 				.set("version", properties.getSvgVersion())
 				.setNumber("width", width, wrapper, widthUnit)
@@ -73,8 +71,8 @@ public final class Svg implements Language
 				.setPosition(corner)
 				.setSize(width, height);
 		element.xml.getAttributes()
-				.setNumber("rx", rx, getFormatWrapper())
-				.setNumber("ry", ry, getFormatWrapper());
+				.setNumber("rx", rx, getFormatter())
+				.setNumber("ry", ry, getFormatter());
 		return element;
 	}
 
@@ -93,7 +91,7 @@ public final class Svg implements Language
 		Svg element = new Svg(xml.append("circle"))
 				.setCenter(center);
 		element.xml.getAttributes()
-				.setNumber("r", r, getFormatWrapper());
+				.setNumber("r", r, getFormatter());
 		return element;
 	}
 
@@ -102,8 +100,8 @@ public final class Svg implements Language
 		Svg element = new Svg(xml.append("ellipse"))
 				.setCenter(center);
 		element.xml.getAttributes()
-				.setNumber("rx", rx, getFormatWrapper())
-				.setNumber("ry", ry, getFormatWrapper());
+				.setNumber("rx", rx, getFormatter())
+				.setNumber("ry", ry, getFormatter());
 		return element;
 	}
 
@@ -294,8 +292,8 @@ public final class Svg implements Language
 	public Svg addTranslate(double x, double y)
 	{
 		return setTransform("translate",
-				getFormatWrapper().format(x) + " " +
-				getFormatWrapper().format(y));
+				getFormatter().format(x) + " " +
+				getFormatter().format(y));
 	}
 
 	/**
@@ -304,8 +302,8 @@ public final class Svg implements Language
 	public Svg addScale(double x, double y)
 	{
 		return setTransform("scale",
-				getFormatWrapper().format(x) + " " +
-				getFormatWrapper().format(y));
+				getFormatter().format(x) + " " +
+				getFormatter().format(y));
 	}
 
 	/**
@@ -314,7 +312,7 @@ public final class Svg implements Language
 	public Svg addScale(double factor)
 	{
 		return setTransform("scale",
-				getFormatWrapper().format(factor));
+				getFormatter().format(factor));
 	}
 
 	/**
@@ -323,7 +321,7 @@ public final class Svg implements Language
 	public Svg addRotate(Angle angle)
 	{
 		return setTransform("rotate",
-				getDegreesFormatWrapper().format(angle.getDegrees()));
+				getDegreesFormatter().format(angle.getDegrees()));
 	}
 
 	/**
@@ -332,8 +330,8 @@ public final class Svg implements Language
 	public Svg addRotate(Angle angle, Point center)
 	{
 		return setTransform("rotate",
-				getDegreesFormatWrapper().format(angle.getDegrees()) + " " +
-				center.toSvg(getFormatWrapper().getNumberFormat()));
+				getDegreesFormatter().format(angle.getDegrees()) + " " +
+				center.toSvg(getFormatter()));
 	}
 
 	/**
@@ -342,7 +340,7 @@ public final class Svg implements Language
 	public Svg addSkewX(Angle angle)
 	{
 		return setTransform("skewX",
-				getDegreesFormatWrapper().format(angle.getDegrees()));
+				getDegreesFormatter().format(angle.getDegrees()));
 	}
 
 	/**
@@ -351,7 +349,7 @@ public final class Svg implements Language
 	public Svg addSkewY(Angle angle)
 	{
 		return setTransform("skewY",
-				getDegreesFormatWrapper().format(angle.getDegrees()));
+				getDegreesFormatter().format(angle.getDegrees()));
 	}
 
 	/**
@@ -360,12 +358,12 @@ public final class Svg implements Language
 	public Svg addMatrix(double a, double b, double c, double d, double e, double f)
 	{
 		return setTransform("matrix",
-				getFormatWrapper().format(a) + " " +
-				getFormatWrapper().format(b) + " " +
-				getFormatWrapper().format(c) + " " +
-				getFormatWrapper().format(d) + " " +
-				getFormatWrapper().format(e) + " " +
-				getFormatWrapper().format(f));
+				getFormatter().format(a) + " " +
+				getFormatter().format(b) + " " +
+				getFormatter().format(c) + " " +
+				getFormatter().format(d) + " " +
+				getFormatter().format(e) + " " +
+				getFormatter().format(f));
 	}
 
 	/**
@@ -404,26 +402,24 @@ public final class Svg implements Language
 
 	public Svg setD(Path path)
 	{
-		return setD(path.toSvg(
-				getFormatWrapper().getNumberFormat(),
-				getDegreesFormatWrapper().getNumberFormat()));
+		return setD(path.toSvg(getFormatter(), getDegreesFormatter()));
 	}
 
 	public Svg setDx(Number... dx)
 	{
-		xml.getAttributes().setNumber("dx", " ", getFormatWrapper(), dx);
+		xml.getAttributes().setNumber("dx", " ", getFormatter(), dx);
 		return this;
 	}
 
 	public Svg setDy(Number... dy)
 	{
-		xml.getAttributes().setNumber("dy", " ", getFormatWrapper(), dy);
+		xml.getAttributes().setNumber("dy", " ", getFormatter(), dy);
 		return this;
 	}
 
 	public Svg setHeight(Number height)
 	{
-		xml.getAttributes().setNumber("height", height, getFormatWrapper());
+		xml.getAttributes().setNumber("height", height, getFormatter());
 		return this;
 	}
 
@@ -445,9 +441,9 @@ public final class Svg implements Language
 
 	public Svg setPoints(Point... points)
 	{
-		NumberFormat format = getFormatWrapper().getNumberFormat();
+		NumberFormatter formatter = getFormatter();
 		for (Point point: points) {
-			xml.getAttributes().setComplex("points", " ", false, point.toSvg(format));
+			xml.getAttributes().setComplex("points", " ", false, point.toSvg(formatter));
 		}
 		return this;
 	}
@@ -490,7 +486,7 @@ public final class Svg implements Language
 	{
 		for (Angle r: rotate) {
 			xml.getAttributes().setNumber(
-					"rotate", " ", getDegreesFormatWrapper(), r.getDegrees());
+					"rotate", " ", getDegreesFormatter(), r.getDegrees());
 		}
 		return this;
 	}
@@ -505,12 +501,12 @@ public final class Svg implements Language
 	{
 		String viewBox;
 		if (corner != null) {
-			NumberFormat format = getFormatWrapper().getNumberFormat();
+			NumberFormatter formatter = getFormatter();
 			viewBox =
-					format.format(corner.getX()) + " " +
-					format.format(corner.getY()) + " " +
-					format.format(width) + " " +
-					format.format(height);
+					formatter.format(corner.getX()) + " " +
+					formatter.format(corner.getY()) + " " +
+					formatter.format(width) + " " +
+					formatter.format(height);
 		}
 		else {
 			viewBox = null;
@@ -521,7 +517,7 @@ public final class Svg implements Language
 
 	public Svg setWidth(Number width)
 	{
-		xml.getAttributes().setNumber("width", width, getFormatWrapper());
+		xml.getAttributes().setNumber("width", width, getFormatter());
 		return this;
 	}
 
@@ -547,20 +543,20 @@ public final class Svg implements Language
 	{
 		if (point != null) {
 			xml.getAttributes()
-					.setNumber(xName, point.getX(), getFormatWrapper())
-					.setNumber(yName, point.getY(), getFormatWrapper());
+					.setNumber(xName, point.getX(), getFormatter())
+					.setNumber(yName, point.getY(), getFormatter());
 		}
 		return this;
 	}
 
-	private NumberFormatWrapper getFormatWrapper()
+	private NumberFormatter getFormatter()
 	{
-		return ((SvgProperties) xml.getLanguageProperties()).getFormatWrapper();
+		return ((SvgProperties) xml.getLanguageProperties()).getFormatter();
 	}
 
-	private NumberFormatWrapper getDegreesFormatWrapper()
+	private NumberFormatter getDegreesFormatter()
 	{
-		return ((SvgProperties) xml.getLanguageProperties()).getDegreesFormatWrapper();
+		return ((SvgProperties) xml.getLanguageProperties()).getDegreesFormatter();
 	}
 
 	public enum Units

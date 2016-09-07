@@ -2,14 +2,11 @@ package com.lib16.java.svg;
 
 import java.util.LinkedHashMap;
 
-import com.lib16.java.utils.NumberFormatWrapper;
+import com.lib16.java.utils.NumberFormatter;
 import com.lib16.java.xml.XmlProperties;
 
 public class DefaultSvgProperties extends XmlProperties implements SvgProperties
 {
-	private NumberFormatWrapper formatWrapper = new NumberFormatWrapper(4);
-	private NumberFormatWrapper degreeFormatWrapper = new NumberFormatWrapper(2);
-
 	@Override
 	public String getMimeType()
 	{
@@ -43,14 +40,14 @@ public class DefaultSvgProperties extends XmlProperties implements SvgProperties
 	}
 
 	@Override
-	public NumberFormatWrapper getFormatWrapper()
+	public NumberFormatter getFormatter()
 	{
-		return formatWrapper;
+		return NumberFormatter.DEFAULT_FORMATTER;
 	}
 
 	@Override
-	public NumberFormatWrapper getDegreesFormatWrapper()
+	public NumberFormatter getDegreesFormatter()
 	{
-		return degreeFormatWrapper;
+		return NumberFormatter.DEFAULT_DEGREE_FORMATTER;
 	}
 }
