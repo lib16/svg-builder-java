@@ -10,7 +10,7 @@ import com.lib16.java.graphics.geometry.Point;
 import com.lib16.java.svg.Svg.Align;
 import com.lib16.java.svg.Svg.MeetOrSlice;
 import com.lib16.java.svg.Svg.Units;
-import com.lib16.java.utils.Unit;
+import com.lib16.java.utils.enums.Unit;
 import com.lib16.java.xml.shared.TargetAttribute.Target;
 
 public class SvgTest

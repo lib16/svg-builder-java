@@ -3,6 +3,7 @@ package com.lib16.java.svg;
 import java.util.LinkedHashMap;
 
 import com.lib16.java.utils.NumberFormatter;
+import com.lib16.java.utils.enums.ImageType;
 import com.lib16.java.xml.XmlProperties;
 
 public class DefaultSvgProperties extends XmlProperties implements SvgProperties
@@ -10,7 +11,7 @@ public class DefaultSvgProperties extends XmlProperties implements SvgProperties
 	@Override
 	public String getMimeType()
 	{
-		return "image/svg+xml";
+		return ImageType.SVG.toString();
 	}
 
 	@Override

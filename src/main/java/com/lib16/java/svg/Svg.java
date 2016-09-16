@@ -4,7 +4,7 @@ import com.lib16.java.graphics.geometry.Angle;
 import com.lib16.java.graphics.geometry.Path;
 import com.lib16.java.graphics.geometry.Point;
 import com.lib16.java.utils.NumberFormatter;
-import com.lib16.java.utils.Unit;
+import com.lib16.java.utils.enums.Unit;
 import com.lib16.java.xml.Language;
 import com.lib16.java.xml.Xml;
 import com.lib16.java.xml.shared.ClassAttribute;
@@ -14,6 +14,8 @@ import com.lib16.java.xml.shared.XLink;
 
 public final class Svg implements Language
 {
+	public static final SvgProperties SVG_PROPERTIES = new DefaultSvgProperties();
+
 	private Xml xml;
 
 	private Svg(Xml xml)
@@ -25,7 +27,7 @@ public final class Svg implements Language
 			Number width, Unit widthUnit, Number height, Unit heightUnit)
 	{
 		if (properties == null) {
-			properties = new DefaultSvgProperties();
+			properties = SVG_PROPERTIES;
 		}
 		Svg element = new Svg(Xml.createRoot("svg", properties));
 		NumberFormatter wrapper = element.getFormatter();
@@ -55,7 +57,7 @@ public final class Svg implements Language
 	public static Svg createSub(SvgProperties properties)
 	{
 		if (properties == null) {
-			properties = new DefaultSvgProperties();
+			properties = SVG_PROPERTIES;
 		}
 		return new Svg(Xml.createSub(properties));
 	}
